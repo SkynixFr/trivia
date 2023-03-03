@@ -2,9 +2,8 @@ export class Game {
 	private players: IPlayer[] = [];
 	private winningCondition: IWinningCondition;
 
-	private places: Array<number> = [];
-	private purses: Array<number> = [];
-	private inPenaltyBox: Array<boolean> = [];
+	private places: number[] = [];
+	private purses: number[] = [];
 	private currentPlayerIndex: number = 0;
 	private currentPlayer = this.players[this.currentPlayerIndex];
 
@@ -15,6 +14,7 @@ export class Game {
 
 	constructor(winningCondition: IWinningCondition) {
 		this.winningCondition = winningCondition;
+
 		// for (let i = 0; i < 50; i++) {
 		// 	this.popQuestions.push('Pop Question ' + i);
 		// 	this.scienceQuestions.push('Science Question ' + i);
@@ -82,54 +82,6 @@ export class Game {
 		} else {
 			this.calculateNewPlayerPlace(roll);
 		}
-
-		// console.log(
-		// 	this.players[this.currentPlayerIndex] + ' is the current player'
-		// );
-		// console.log('They have rolled a ' + roll);
-
-		// if (this.inPenaltyBox[this.currentPlayerIndex]) {
-		// 	if (roll % 2 != 0) {
-		// 		this.isGettingOutOfPenaltyBox = true;
-
-		// 		console.log(
-		// 			this.players[this.currentPlayerIndex] +
-		// 				' is getting out of the penalty box'
-		// 		);
-		// 		this.places[this.currentPlayerIndex] =
-		// 			this.places[this.currentPlayerIndex] + roll;
-		// 		if (this.places[this.currentPlayerIndex] > 11) {
-		// 			this.places[this.currentPlayerIndex] =
-		// 				this.places[this.currentPlayerIndex] - 12;
-		// 		}
-
-		// 		console.log(
-		// 			this.players[this.currentPlayerIndex] +
-		// 				"'s new location is " +
-		// 				this.places[this.currentPlayerIndex]
-		// 		);
-		// 		console.log('The category is ' + this.currentCategory());
-		// 		this.askQuestion();
-		// 	} else {
-		// 		console.log(
-		// 			this.players[this.currentPlayerIndex] +
-		// 				' is not getting out of the penalty box'
-		// 		);
-		// 		this.isGettingOutOfPenaltyBox = false;
-		// 	}
-		// } else {
-		// 	this.places[this.currentPlayerIndex] =
-		// 		this.places[this.currentPlayerIndex] + roll;
-		// 	if (this.places[this.currentPlayerIndex] > 11) {
-		// 		this.places[this.currentPlayerIndex] =
-		// 			this.places[this.currentPlayerIndex] - 12;
-		// 	}
-
-		// 	console.log(
-		// 		this.players[this.currentPlayerIndex] +
-		// 			"'s new location is " +
-		// 			this.places[this.currentPlayerIndex]
-		// 	);
 		// 	console.log('The category is ' + this.currentCategory());
 		// 	this.askQuestion();
 		// }
@@ -189,18 +141,17 @@ export class Game {
 		);
 	}
 
-	// public wrongAnswer(): boolean {
-	// 	console.log('Question was incorrectly answered');
-	// 	console.log(
-	// 		this.players[this.currentPlayerIndex] + ' was sent to the penalty box'
-	// 	);
-	// 	this.inPenaltyBox[this.currentPlayerIndex] = true;
+	public wrongAnswer(): boolean {
+		console.log('Question was incorrectly answered');
+		console.log(`${this.currentPlayer} was sent to the penalty box`);
 
-	// 	this.currentPlayerIndex += 1;
-	// 	if (this.currentPlayerIndex == this.players.length)
-	// 		this.currentPlayerIndex = 0;
-	// 	return true;
-	// }
+		this.currentPlayer.setInPenaltyBox;
+
+		this.currentPlayerIndex += 1;
+		if (this.currentPlayerIndex == this.players.length)
+			this.currentPlayerIndex = 0;
+		return true;
+	}
 
 	// public wasCorrectlyAnswered(): boolean {
 	// 	if (this.inPenaltyBox[this.currentPlayerIndex]) {
