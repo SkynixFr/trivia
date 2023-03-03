@@ -8,20 +8,24 @@ export class Game {
 	private rockQuestions: Array<string> = [];
 	//ajout de question manager
     private questionManager: QuestionManager;
+	private places: number[] = [];
+	private purses: number[] = [];
+	private currentPlayerIndex: number = 0;
+	private currentPlayer = this.players[this.currentPlayerIndex];
 
-    constructor() {
-      this.questionManager = new QuestionManager();
-    }
-  
+	constructor(winningCondition: IWinningCondition) {
+		this.winningCondition = winningCondition;
+		this.questionManager = new QuestionManager()
+	}
     private askQuestion(): void {
       const currentCategory = this.getCategory();
       console.log(`The category is ${currentCategory.getName()}`);
-      console.log(currentCategory.getQuestion(this.places[this.currentPlayer]));
+      console.log(currentCategory.getQuestion(this.currentPlayer.getPlace()));
     }
   
     private getCategory(): Category {
       const categories = ["Pop", "Science", "Sports", "Rock"];
-      const index = this.places[this.currentPlayer] % categories.length;
+      const index = this.currentPlayer.getPlace() % categories.length;
       return new Category(categories[index], this.questionManager);
 	  //on a plus besoin du boucle puisque chaque catégorie de questions est gérée de manière autonome.
 
@@ -48,26 +52,13 @@ export class Game {
 	// 	console.log('They are player number ' + this.players.length);
 
 	// 	return true;
-	private places: number[] = [];
-	private purses: number[] = [];
-	private currentPlayerIndex: number = 0;
-	private currentPlayer = this.players[this.currentPlayerIndex];
-
+	
 	// private popQuestions: Array<string> = [];
 	// private scienceQuestions: Array<string> = [];
 	// private sportsQuestions: Array<string> = [];
 	// private rockQuestions: Array<string> = [];
 
-	constructor(winningCondition: IWinningCondition) {
-		this.winningCondition = winningCondition;
-
-		// for (let i = 0; i < 50; i++) {
-		// 	this.popQuestions.push('Pop Question ' + i);
-		// 	this.scienceQuestions.push('Science Question ' + i);
-		// 	this.sportsQuestions.push('Sports Question ' + i);
-		// 	this.rockQuestions.push(this.createRockQuestion(i));
-		// }
-	}
+	
 
 	// private createRockQuestion(index: number): string {
 	// 	return 'Rock Question ' + index;
@@ -347,7 +338,7 @@ export class Player implements IPlayer {
       return question;
     }
   }
-}
+
 
 interface IWinningCondition {
 	didPlayerWin(purses: number[], currentPlayerIndex: number): boolean;
@@ -358,38 +349,3 @@ export class WinningCondition implements IWinningCondition {
 		return purses[currentPlayerIndex] === 6;
 	}
 }
-//Extraction des classes Questions et Catégorie de la classe Game
-/* class Question {
-	private popQuestions: string[] = [];
-	private scienceQuestions: string[] = [];
-	private sportsQuestions: string[] = [];
-	private rockQuestions: string[] = [];
-	private currentCategory: string = '';
-
-	constructor() {
-		this.initializeQuestions();
-	}
-
-	private initializeQuestions(): void {
-		for (let i = 0; i < 50; i++) {
-			this.popQuestions.push(`Pop Question ${i}`);
-			this.scienceQuestions.push(`Science Question ${i}`);
-			this.sportsQuestions.push(`Sports Question ${i}`);
-			this.rockQuestions.push(`Rock Question ${i}`);
-		}
-	}
-
-	public ask(category: string): void {
-		const question = {
-			Pop: this.popQuestions.shift(),
-			Science: this.scienceQuestions.shift(),
-			Sports: this.sportsQuestions.shift(),
-			Rock: this.rockQuestions.shift()
-		}[category];
-		console.log(question);
-	}
-
-	public getCurrentCategory(): string {
-		return this.currentCategory;
-	}
-} */
