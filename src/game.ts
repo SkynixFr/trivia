@@ -27,8 +27,8 @@ export class Game {
       const categories = ["Pop", "Science", "Sports", "Rock"];
       const index = this.places[this.currentPlayer] % categories.length;
       return new Category(categories[index], this.questionManager);
-	  //on a plus besoin du boucle puisque chaque catégorie de questions est gérée de manière autonome
-	  
+	  //on a plus besoin du boucle puisque chaque catégorie de questions est gérée de manière autonome.
+
 	/* constructor() {
 		for (let i = 0; i < 50; i++) {
 			this.popQuestions.push('Pop Question ' + i);
