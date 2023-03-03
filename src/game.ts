@@ -134,6 +134,29 @@ export class Game {
 		// 	this.askQuestion();
 		// }
 	}
+	/* private askQuestion(): void {
+		if (this.currentCategory() == 'Pop')
+			console.log(this.popQuestions.shift());
+		if (this.currentCategory() == 'Science')
+			console.log(this.scienceQuestions.shift());
+		if (this.currentCategory() == 'Sports')
+			console.log(this.sportsQuestions.shift());
+		if (this.currentCategory() == 'Rock')
+			console.log(this.rockQuestions.shift());
+	}
+
+	private currentCategory(): string {
+		if (this.places[this.currentPlayer] == 0) return 'Pop';
+		if (this.places[this.currentPlayer] == 4) return 'Pop';
+		if (this.places[this.currentPlayer] == 8) return 'Pop';
+		if (this.places[this.currentPlayer] == 1) return 'Science';
+		if (this.places[this.currentPlayer] == 5) return 'Science';
+		if (this.places[this.currentPlayer] == 9) return 'Science';
+		if (this.places[this.currentPlayer] == 2) return 'Sports';
+		if (this.places[this.currentPlayer] == 6) return 'Sports';
+		if (this.places[this.currentPlayer] == 10) return 'Sports';
+		return 'Rock';
+	} */
 
 	// private askQuestion(): void {
 	// 	if (this.currentCategory() == 'Pop')
@@ -285,5 +308,40 @@ interface IWinningCondition {
 export class WinningCondition implements IWinningCondition {
 	public didPlayerWin(purses: number[], currentPlayerIndex: number): boolean {
 		return purses[currentPlayerIndex] === 6;
+	}
+}
+//Extraction des classes Questions et Catégorie de la classe Game
+class Question {
+	private popQuestions: string[] = [];
+	private scienceQuestions: string[] = [];
+	private sportsQuestions: string[] = [];
+	private rockQuestions: string[] = [];
+	private currentCategory: string = '';
+
+	constructor() {
+		this.initializeQuestions();
+	}
+
+	private initializeQuestions(): void {
+		for (let i = 0; i < 50; i++) {
+			this.popQuestions.push(`Pop Question ${i}`);
+			this.scienceQuestions.push(`Science Question ${i}`);
+			this.sportsQuestions.push(`Sports Question ${i}`);
+			this.rockQuestions.push(`Rock Question ${i}`);
+		}
+	}
+
+	public ask(category: string): void {
+		const question = {
+			Pop: this.popQuestions.shift(),
+			Science: this.scienceQuestions.shift(),
+			Sports: this.sportsQuestions.shift(),
+			Rock: this.rockQuestions.shift()
+		}[category];
+		console.log(question);
+	}
+
+	public getCurrentCategory(): string {
+		return this.currentCategory;
 	}
 }
