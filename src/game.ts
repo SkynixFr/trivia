@@ -10,8 +10,26 @@ export class Game {
 	private scienceQuestions: Array<string> = [];
 	private sportsQuestions: Array<string> = [];
 	private rockQuestions: Array<string> = [];
+	//ajout de question manager
+    private questionManager: QuestionManager;
 
-	constructor() {
+    constructor() {
+      this.questionManager = new QuestionManager();
+    }
+  
+    private askQuestion(): void {
+      const currentCategory = this.getCategory();
+      console.log(`The category is ${currentCategory.getName()}`);
+      console.log(currentCategory.getQuestion(this.places[this.currentPlayer]));
+    }
+  
+    private getCategory(): Category {
+      const categories = ["Pop", "Science", "Sports", "Rock"];
+      const index = this.places[this.currentPlayer] % categories.length;
+      return new Category(categories[index], this.questionManager);
+	  //on a plus besoin du boucle puisque chaque catégorie de questions est gérée de manière autonome
+	  
+	/* constructor() {
 		for (let i = 0; i < 50; i++) {
 			this.popQuestions.push('Pop Question ' + i);
 			this.scienceQuestions.push('Science Question ' + i);
@@ -22,7 +40,7 @@ export class Game {
 
 	private createRockQuestion(index: number): string {
 		return 'Rock Question ' + index;
-	}
+	} */
 
 	// public add(name: string): boolean {
 	// 	this.players.push(name);
@@ -216,80 +234,54 @@ export class Player {
 	public releaseFromPenaltyBox() {
 		this.inPenaltyBox = false;
 	}
-}
-//Extraction des classes Questions et Catégorie de la classe Game
-/* class Question  {
-	private popQuestions: string[] = [];
-	private scienceQuestions: string[] = [];
-	private sportsQuestions: string[] = [];
-	private rockQuestions: string[] = [];
-	private currentCategory: string = '';
+}  
+  class QuestionManager {
+    getQuestions(name: string): string[] {
+        throw new Error("Method not implemented.");
+    }
+    private categories: Category[] = [];
   
-	constructor() {
-	  this.initializeQuestions();
-	}
+    constructor() {
+      this.categories.push(new Category("Pop", this));
+      this.categories.push(new Category("Science", this));
+      this.categories.push(new Category("Sports", this));
+      this.categories.push(new Category("Rock", this));
+    }
   
-	private initializeQuestions(): void {
-	  for (let i = 0; i < 50; i++) {
-		this.popQuestions.push(`Pop Question ${i}`);
-		this.scienceQuestions.push(`Science Question ${i}`);
-		this.sportsQuestions.push(`Sports Question ${i}`);
-		this.rockQuestions.push(`Rock Question ${i}`);
-	  }
-	}
-  
-	public ask(category: string): void {
-	  const question = {
-		'Pop': this.popQuestions.shift(),
-		'Science': this.scienceQuestions.shift(),
-		'Sports': this.sportsQuestions.shift(),
-		'Rock': this.rockQuestions.shift(),
-	  }[category];
-	  console.log(question);
-	}
-  
-	public getCurrentCategory(): string {
-	  return this.currentCategory;
-	}
-  } */
-  class QuestionInit {
-	public static initializeQuestions(numQuestions: number, prefix: string): string[] {
-	  const questions: string[] = [];
-	  for (let i = 0; i < numQuestions; i++) {
-		questions.push(`${prefix} Question ${i}`);
-	  }
-	  return questions;
-	}
+    public getQuestion(categoryName: string, index: number): string {
+      const category = this.categories.find(c => c.getName() === categoryName);
+      if (category) {
+        return category.getQuestion(index);
+      }
+      return "";
+    }
   }
   
-  class PopQuestion {
-	private static questions: string[] = QuestionInit.initializeQuestions(50, "Pop");
+  class Category {
+    private name: string;
+    private questions: string[];
+    private currentQuestionIndex = 0;
   
-	public static getQuestion(index: number): string {
-	  return PopQuestion.questions[index];
-	}
-  }
+    constructor(name: string, questionManager: QuestionManager) {
+      this.name = name;
+      this.questions = questionManager.getQuestions(name);
+    }
   
-  class ScienceQuestion {
-	private static questions: string[] = QuestionInit.initializeQuestions(50, "Science");
+    public getQuestion(index: number): string {
+      return this.questions[index];
+    }
   
-	public static getQuestion(index: number): string {
-	  return ScienceQuestion.questions[index];
-	}
-  }
+    public getQuestions(): string[] {
+      return this.questions;
+    }
   
-  class SportsQuestion {
-	private static questions: string[] = QuestionInit.initializeQuestions(50, "Sports");
+    public getName(): string {
+      return this.name;
+    }
   
-	public static getQuestion(index: number): string {
-	  return SportsQuestion.questions[index];
-	}
-  }
-  
-  class RockQuestion {
-	private static questions: string[] = QuestionInit.initializeQuestions(50, "Rock");
-  
-	public static getQuestion(index: number): string {
-	  return RockQuestion.questions[index];
-	}
+    public getNextQuestion(): string {
+      const question = this.questions[this.currentQuestionIndex];
+      this.currentQuestionIndex = (this.currentQuestionIndex + 1) % this.questions.length;
+      return question;
+    }
   }
