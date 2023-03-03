@@ -218,7 +218,7 @@ export class Player {
 	}
 }
 //Extraction des classes Questions et Catégorie de la classe Game
-class Question  {
+/* class Question  {
 	private popQuestions: string[] = [];
 	private scienceQuestions: string[] = [];
 	private sportsQuestions: string[] = [];
@@ -251,5 +251,45 @@ class Question  {
 	public getCurrentCategory(): string {
 	  return this.currentCategory;
 	}
+  } */
+  class QuestionInit {
+	public static initializeQuestions(numQuestions: number, prefix: string): string[] {
+	  const questions: string[] = [];
+	  for (let i = 0; i < numQuestions; i++) {
+		questions.push(`${prefix} Question ${i}`);
+	  }
+	  return questions;
+	}
   }
   
+  class PopQuestion {
+	private static questions: string[] = QuestionInit.initializeQuestions(50, "Pop");
+  
+	public static getQuestion(index: number): string {
+	  return PopQuestion.questions[index];
+	}
+  }
+  
+  class ScienceQuestion {
+	private static questions: string[] = QuestionInit.initializeQuestions(50, "Science");
+  
+	public static getQuestion(index: number): string {
+	  return ScienceQuestion.questions[index];
+	}
+  }
+  
+  class SportsQuestion {
+	private static questions: string[] = QuestionInit.initializeQuestions(50, "Sports");
+  
+	public static getQuestion(index: number): string {
+	  return SportsQuestion.questions[index];
+	}
+  }
+  
+  class RockQuestion {
+	private static questions: string[] = QuestionInit.initializeQuestions(50, "Rock");
+  
+	public static getQuestion(index: number): string {
+	  return RockQuestion.questions[index];
+	}
+  }
