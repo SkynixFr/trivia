@@ -91,7 +91,7 @@ export class Game {
 		}
 	}
 
-	private askQuestion(): void {
+	/* private askQuestion(): void {
 		if (this.currentCategory() == 'Pop')
 			console.log(this.popQuestions.shift());
 		if (this.currentCategory() == 'Science')
@@ -113,7 +113,7 @@ export class Game {
 		if (this.places[this.currentPlayer] == 6) return 'Sports';
 		if (this.places[this.currentPlayer] == 10) return 'Sports';
 		return 'Rock';
-	}
+	} */
 
 	private didPlayerWin(): boolean {
 		return !(this.purses[this.currentPlayer] == 6);
@@ -217,3 +217,39 @@ export class Player {
 		this.inPenaltyBox = false;
 	}
 }
+//Extraction des classes Questions et Catégorie de la classe Game
+class Question  {
+	private popQuestions: string[] = [];
+	private scienceQuestions: string[] = [];
+	private sportsQuestions: string[] = [];
+	private rockQuestions: string[] = [];
+	private currentCategory: string = '';
+  
+	constructor() {
+	  this.initializeQuestions();
+	}
+  
+	private initializeQuestions(): void {
+	  for (let i = 0; i < 50; i++) {
+		this.popQuestions.push(`Pop Question ${i}`);
+		this.scienceQuestions.push(`Science Question ${i}`);
+		this.sportsQuestions.push(`Sports Question ${i}`);
+		this.rockQuestions.push(`Rock Question ${i}`);
+	  }
+	}
+  
+	public ask(category: string): void {
+	  const question = {
+		'Pop': this.popQuestions.shift(),
+		'Science': this.scienceQuestions.shift(),
+		'Sports': this.sportsQuestions.shift(),
+		'Rock': this.rockQuestions.shift(),
+	  }[category];
+	  console.log(question);
+	}
+  
+	public getCurrentCategory(): string {
+	  return this.currentCategory;
+	}
+  }
+  
