@@ -1,3 +1,4 @@
+
 export class Game {
 	private players: IPlayer[] = [];
 	private winningCondition: IWinningCondition;
@@ -7,9 +8,6 @@ export class Game {
 	private scienceQuestions: Array<string> = [];
 	private sportsQuestions: Array<string> = [];
 	private rockQuestions: Array<string> = [];
-	//ajout de question manager
-	/*     private questionManager: QuestionManager;
-	 */
 	private places: number[] = [];
 	private purses: number[] = [];
 	private currentPlayerIndex: number = 0;
@@ -30,26 +28,6 @@ export class Game {
 		const index = this.currentPlayer.getPlace() % categories.length;
 		return new Category(categories[index], this.questionManager);
 	}
-	// public add(name: string): boolean {
-	// 	this.players.push(name);
-	// 	this.places[this.howManyPlayers()] = 0;
-	// 	this.purses[this.howManyPlayers()] = 0;
-	// 	this.inPenaltyBox[this.howManyPlayers()] = false;
-
-	// 	console.log(name + ' was added');
-	// 	console.log('They are player number ' + this.players.length);
-
-	// 	return true;
-
-	// private popQuestions: Array<string> = [];
-	// private scienceQuestions: Array<string> = [];
-	// private sportsQuestions: Array<string> = [];
-	// private rockQuestions: Array<string> = [];
-
-	// private createRockQuestion(index: number): string {
-	// 	return 'Rock Question ' + index;
-	// }
-
 	public addPlayer(name: string) {
 		const player = new Player(name);
 		this.players.push(player);
@@ -57,7 +35,13 @@ export class Game {
 		console.log(`${player.getName()} was added`);
 		console.log(`They are player number ${this.howManyPlayers()}`);
 	}
-
+    private nextPlayer() {
+        this.currentPlayerIndex += 1;
+        if (this.currentPlayerIndex == this.players.length) {
+          this.currentPlayerIndex = 0;
+        }
+        this.currentPlayer = this.players[this.currentPlayerIndex];
+    }
 	private howManyPlayers(): number {
 		return this.players.length;
 	}
@@ -132,51 +116,34 @@ export class Game {
 		return true;
 	}
 
-	// public wasCorrectlyAnswered(): boolean {
-	// 	if (this.inPenaltyBox[this.currentPlayerIndex]) {
-	// 		if (this.isGettingOutOfPenaltyBox) {
-	// 			console.log('Answer was correct!!!!');
-	// 			this.purses[this.currentPlayerIndex] += 1;
-	// 			console.log(
-	// 				this.players[this.currentPlayerIndex] +
-	// 					' now has ' +
-	// 					this.purses[this.currentPlayerIndex] +
-	// 					' Gold Coins.'
-	// 			);
-
-	// 			var winner = this.didPlayerWin();
-	// 			this.currentPlayerIndex += 1;
-	// 			if (this.currentPlayerIndex == this.players.length)
-	// 				this.currentPlayerIndex = 0;
-
-	// 			return winner;
-	// 		} else {
-	// 			this.currentPlayerIndex += 1;
-	// 			if (this.currentPlayerIndex == this.players.length)
-	// 				this.currentPlayerIndex = 0;
-	// 			return true;
-	// 		}
-	// 	} else {
-	// 		console.log('Answer was corrent!!!!');
-
-	// 		this.purses[this.currentPlayerIndex] += 1;
-	// 		console.log(
-	// 			this.players[this.currentPlayerIndex] +
-	// 				' now has ' +
-	// 				this.purses[this.currentPlayerIndex] +
-	// 				' Gold Coins.'
-	// 		);
-
-	// 		var winner = this.didPlayerWin();
-
-	// 		this.currentPlayerIndex += 1;
-	// 		if (this.currentPlayerIndex == this.players.length)
-	// 			this.currentPlayerIndex = 0;
-
-	// 		return winner;
-	// 	}
-	// }
-}
+	public wasCorrectlyAnswered(): boolean {
+        if (this.getCurrentPlayer().isInPenaltyBox()) {
+            const roll = Math.floor(Math.random() * 6) + 1; // Simulation 
+            if (this.getCurrentPlayer().determineIfPlayerIsGettingOutOfPenaltyBox(roll)) {
+                console.log('Answer was correct!!!!');
+                this.getCurrentPlayer().addCoin();
+                console.log(`${this.getCurrentPlayer().getName()} now has ${this.getCurrentPlayer().getPurse()} Gold Coins.`);
+    
+                const winner = this.didPlayerWin();
+                this.nextPlayer();
+                return winner;
+            } else {
+                console.log(`${this.getCurrentPlayer().getName()} is not getting out of the penalty box`);
+                this.nextPlayer();
+                return true;
+            }
+        } else {
+            console.log('Answer was correct!!!!');
+            this.getCurrentPlayer().addCoin();
+            console.log(`${this.getCurrentPlayer().getName()} now has ${this.getCurrentPlayer().getPurse()} Gold Coins.`);
+    
+            const winner = this.didPlayerWin();
+            this.nextPlayer();
+            return winner;
+        }
+    }
+    
+}    
 
 interface IPlayer {
 	getName(): string;
@@ -187,6 +154,8 @@ interface IPlayer {
 	isInPenaltyBox(): boolean;
 	setInPenaltyBox(): void;
 	releaseFromPenaltyBox(): void;
+	addCoin(): void;
+    determineIfPlayerIsGettingOutOfPenaltyBox(roll: number): boolean;
 }
 
 export class Player implements IPlayer {
@@ -197,7 +166,9 @@ export class Player implements IPlayer {
 	constructor(name: string) {
 		this.name = name;
 	}
-
+	public determineIfPlayerIsGettingOutOfPenaltyBox(roll: number): boolean {
+        return roll % 2 !== 0;
+    }   
 	public getName(): string {
 		return this.name;
 	}
@@ -229,96 +200,10 @@ export class Player implements IPlayer {
 	public releaseFromPenaltyBox() {
 		this.inPenaltyBox = false;
 	}
+	public addCoin() {
+        this.purse += 1;
+      }
 }
-// interface IQuestionManager {
-// 	getQuestion(categoryName: string, index: number): string;
-// 	getQuestions(categoryName: string): string[];
-// }
-// class QuestionManager implements IQuestionManager {
-// 	private categoryManager: ICategoryManager;
-
-// 	constructor(categoryManager: ICategoryManager) {
-// 		this.categoryManager = categoryManager;
-// 		// this.categories.push(new Category('Pop', this));
-// 		// this.categories.push(new Category('Science', this));
-// 		// this.categories.push(new Category('Sports', this));
-// 		// this.categories.push(new Category('Rock', this));
-// 	}
-
-// 	public getQuestion(categoryName: string, index: number): string {
-// 		const category = this.categoryManager.getCategory(categoryName);
-// 		if (category && index >= 0 && index < category.getQuestions().length) {
-// 			return category.getQuestion(index);
-// 		}
-// 		return '';
-// 	}
-
-// 	public getQuestions(categoryName: string): string[] {
-// 		const category = this.categoryManager.getCategory(categoryName);
-// 		if (category) {
-// 			return category.getQuestions();
-// 		}
-// 		return [];
-// 	}
-// }
-
-// interface ICategory {
-// 	getQuestion(index: number): string;
-// 	getQuestions(): string[];
-// 	getName(): string;
-// 	getNextQuestion(): string;
-// }
-// class Category implements ICategory {
-// 	private name: string;
-// 	private questions: string[];
-// 	private currentQuestionIndex = 0;
-
-// 	constructor(name: string, questionManager: IQuestionManager) {
-// 		this.name = name;
-// 		this.questions = questionManager.getQuestions(name);
-// 	}
-
-// 	public getQuestion(index: number): string {
-// 		return this.questions[index];
-// 	}
-
-// 	public getQuestions(): string[]  {
-// 		return this.questions;
-// 	}
-
-// 	public getName(): string {
-// 		return this.name;
-// 	}
-
-// 	public getNextQuestion(): string {
-// 		const question = this.questions[this.currentQuestionIndex];
-// 		this.currentQuestionIndex =
-// 			(this.currentQuestionIndex + 1) % this.questions.length;
-// 		return question;
-// 	}
-// }
-
-// interface ICategoryManager {
-// 	getCategory(name: string): ICategory | undefined;
-// 	getCategories(): string[];
-// }
-
-// class CategoryManager implements ICategoryManager {
-// 	private categories: ICategory[];
-
-// 	constructor(categories: ICategory[]) {
-// 		this.categories = categories;
-// 	}
-
-// 	public getCategory(name: string): ICategory | undefined {
-// 		return this.categories.find(category => category.getName() === name);
-// 	}
-
-// 	public getCategories(): string[] {
-// 		return this.categories.map(category => category.getName());
-// 	}
-// }
-
 interface IQuestion {
 	text: string;
 }
