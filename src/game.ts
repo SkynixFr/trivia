@@ -1,14 +1,16 @@
 export class Game {
 	private players: IPlayer[] = [];
 	private winningCondition: IWinningCondition;
+    private questionManager: IQuestionManager;
 
 	private popQuestions: Array<string> = [];
 	private scienceQuestions: Array<string> = [];
 	private sportsQuestions: Array<string> = [];
 	private rockQuestions: Array<string> = [];
 	//ajout de question manager
-    private questionManager: QuestionManager;
-	private places: number[] = [];
+/*     private questionManager: QuestionManager;
+ */	
+    private places: number[] = [];
 	private purses: number[] = [];
 	private currentPlayerIndex: number = 0;
 	private currentPlayer = this.players[this.currentPlayerIndex];
@@ -27,22 +29,8 @@ export class Game {
       const categories = ["Pop", "Science", "Sports", "Rock"];
       const index = this.currentPlayer.getPlace() % categories.length;
       return new Category(categories[index], this.questionManager);
-	  //on a plus besoin du boucle puisque chaque catégorie de questions est gérée de manière autonome.
-
-	/* constructor() {
-		for (let i = 0; i < 50; i++) {
-			this.popQuestions.push('Pop Question ' + i);
-			this.scienceQuestions.push('Science Question ' + i);
-			this.sportsQuestions.push('Sports Question ' + i);
-			this.rockQuestions.push(this.createRockQuestion(i));
-		}
 	}
-
-	private createRockQuestion(index: number): string {
-		return 'Rock Question ' + index;
-	} */
-
-	// public add(name: string): boolean {
+	  // public add(name: string): boolean {
 	// 	this.players.push(name);
 	// 	this.places[this.howManyPlayers()] = 0;
 	// 	this.purses[this.howManyPlayers()] = 0;
@@ -63,7 +51,7 @@ export class Game {
 	// private createRockQuestion(index: number): string {
 	// 	return 'Rock Question ' + index;
 	// }
-
+	
 	public addPlayer(name: string) {
 		const player = new Player(name);
 		this.players.push(player);
@@ -123,54 +111,6 @@ export class Game {
 		// 	this.askQuestion();
 		// }
 	}
-	/* private askQuestion(): void {
-		if (this.currentCategory() == 'Pop')
-			console.log(this.popQuestions.shift());
-		if (this.currentCategory() == 'Science')
-			console.log(this.scienceQuestions.shift());
-		if (this.currentCategory() == 'Sports')
-			console.log(this.sportsQuestions.shift());
-		if (this.currentCategory() == 'Rock')
-			console.log(this.rockQuestions.shift());
-	}
-
-	private currentCategory(): string {
-		if (this.places[this.currentPlayer] == 0) return 'Pop';
-		if (this.places[this.currentPlayer] == 4) return 'Pop';
-		if (this.places[this.currentPlayer] == 8) return 'Pop';
-		if (this.places[this.currentPlayer] == 1) return 'Science';
-		if (this.places[this.currentPlayer] == 5) return 'Science';
-		if (this.places[this.currentPlayer] == 9) return 'Science';
-		if (this.places[this.currentPlayer] == 2) return 'Sports';
-		if (this.places[this.currentPlayer] == 6) return 'Sports';
-		if (this.places[this.currentPlayer] == 10) return 'Sports';
-		return 'Rock';
-	} */
-
-	// private askQuestion(): void {
-	// 	if (this.currentCategory() == 'Pop')
-	// 		console.log(this.popQuestions.shift());
-	// 	if (this.currentCategory() == 'Science')
-	// 		console.log(this.scienceQuestions.shift());
-	// 	if (this.currentCategory() == 'Sports')
-	// 		console.log(this.sportsQuestions.shift());
-	// 	if (this.currentCategory() == 'Rock')
-	// 		console.log(this.rockQuestions.shift());
-	// }
-
-	// private currentCategory(): string {
-	// 	if (this.places[this.currentPlayerIndex] == 0) return 'Pop';
-	// 	if (this.places[this.currentPlayerIndex] == 4) return 'Pop';
-	// 	if (this.places[this.currentPlayerIndex] == 8) return 'Pop';
-	// 	if (this.places[this.currentPlayerIndex] == 1) return 'Science';
-	// 	if (this.places[this.currentPlayerIndex] == 5) return 'Science';
-	// 	if (this.places[this.currentPlayerIndex] == 9) return 'Science';
-	// 	if (this.places[this.currentPlayerIndex] == 2) return 'Sports';
-	// 	if (this.places[this.currentPlayerIndex] == 6) return 'Sports';
-	// 	if (this.places[this.currentPlayerIndex] == 10) return 'Sports';
-	// 	return 'Rock';
-	// }
-
 	private didPlayerWin(): boolean {
 		return this.winningCondition.didPlayerWin(
 			this.purses,
@@ -288,11 +228,12 @@ export class Player implements IPlayer {
 		this.inPenaltyBox = false;
 	}
 }  
-  class QuestionManager {
-    getQuestions(name: string): string[] {
-        throw new Error("Method not implemented.");
-    }
-    private categories: Category[] = [];
+interface IQuestionManager {
+    getQuestion(categoryName: string, index: number): string;
+    getQuestions(categoryName: string): string[];
+  }
+  class QuestionManager implements IQuestionManager {
+    private categories: ICategory[] = [];
   
     constructor() {
       this.categories.push(new Category("Pop", this));
@@ -302,20 +243,34 @@ export class Player implements IPlayer {
     }
   
     public getQuestion(categoryName: string, index: number): string {
-      const category = this.categories.find(c => c.getName() === categoryName);
-      if (category) {
+      const category = this.categories.find((c) => c.getName() === categoryName);
+      if (category && index >= 0 && index < category.getQuestions().length) {
         return category.getQuestion(index);
       }
       return "";
     }
+  
+    public getQuestions(categoryName: string): string[] {
+      const category = this.categories.find((c) => c.getName() === categoryName);
+      if (category) {
+        return category.getQuestions();
+      }
+      return [];
+    }
   }
   
-  class Category {
+  interface ICategory {
+    getQuestion(index: number): string;
+    getQuestions(): string[];
+    getName(): string;
+    getNextQuestion(): string;
+  }
+  class Category implements ICategory {
     private name: string;
     private questions: string[];
     private currentQuestionIndex = 0;
   
-    constructor(name: string, questionManager: QuestionManager) {
+    constructor(name: string, questionManager: IQuestionManager) {
       this.name = name;
       this.questions = questionManager.getQuestions(name);
     }
@@ -338,7 +293,7 @@ export class Player implements IPlayer {
       return question;
     }
   }
-
+  
 
 interface IWinningCondition {
 	didPlayerWin(purses: number[], currentPlayerIndex: number): boolean;
