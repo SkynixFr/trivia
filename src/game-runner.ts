@@ -1,4 +1,4 @@
-import { Game } from './game';
+/* import { Game } from './game';
 
 export class GameRunner {
 	public static main(): void {
@@ -21,3 +21,4 @@ export class GameRunner {
 }
 
 GameRunner.main();
+ */

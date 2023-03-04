@@ -1,3 +1,9 @@
+import { Category, ICategory, IQuestion } from './question';
+import { Player, IPlayer } from './player';
+import { ICategoryManager, CategoryManager } from './category-manager';
+import { WinningCondition } from './WiningCondition';
+const categoryManager: ICategoryManager = new CategoryManager();
+
 export class Game {
 	private players: IPlayer[] = [];
 	private winningCondition: IWinningCondition;
@@ -107,7 +113,7 @@ export class Game {
 		console.log('Question was incorrectly answered');
 		console.log(`${this.currentPlayer} was sent to the penalty box`);
 
-		this.currentPlayer.setInPenaltyBox;
+		this.currentPlayer.setInPenaltyBox();;
 
 		this.currentPlayerIndex += 1;
 		if (this.currentPlayerIndex == this.players.length)
@@ -143,162 +149,3 @@ export class Game {
     }
     
 }    
-
-interface IPlayer {
-	getName(): string;
-	getPlace(): number;
-	setPlace(place: number): void;
-	getPurse(): number;
-	setPurse(purse: number): void;
-	isInPenaltyBox(): boolean;
-	setInPenaltyBox(): void;
-	releaseFromPenaltyBox(): void;
-	addCoin(): void;
-    determineIfPlayerIsGettingOutOfPenaltyBox(roll: number): boolean;
-}
-
-export class Player implements IPlayer {
-	private name: string;
-	private place: number = 0;
-	private purse: number = 0;
-	private inPenaltyBox: boolean = false;
-	constructor(name: string) {
-		this.name = name;
-	}
-	public determineIfPlayerIsGettingOutOfPenaltyBox(roll: number): boolean {
-        return roll % 2 !== 0;
-    }   
-	public getName(): string {
-		return this.name;
-	}
-
-	public getPlace(): number {
-		return this.place;
-	}
-
-	public setPlace(place: number) {
-		this.place = place;
-	}
-
-	public getPurse(): number {
-		return this.purse;
-	}
-
-	public setPurse(purse: number) {
-		this.purse = purse;
-	}
-
-	public isInPenaltyBox(): boolean {
-		return this.inPenaltyBox;
-	}
-
-	public setInPenaltyBox() {
-		this.inPenaltyBox = true;
-	}
-
-	public releaseFromPenaltyBox() {
-		this.inPenaltyBox = false;
-	}
-	public addCoin() {
-        this.purse += 1;
-      }
-}
-
-interface IQuestion {
-	text: string;
-}
-
-interface ICategory {
-	getQuestion(index: number): string;
-	getQuestions(): IQuestion[];
-	getName(): string;
-	getNextQuestion(): string;
-	addQuestion(question: IQuestion): void;
-}
-
-class Category implements ICategory {
-	private name: string;
-	private questions: IQuestion[];
-	private currentQuestionIndex = 0;
-
-	constructor(name: string) {
-		this.name = name;
-		this.questions = [];
-	}
-
-	public getQuestion(index: number): string {
-		return this.questions[index].text;
-	}
-
-	public getQuestions(): IQuestion[] {
-		return this.questions;
-	}
-
-	public getName(): string {
-		return this.name;
-	}
-
-	public getNextQuestion(): string {
-		const question = this.questions[this.currentQuestionIndex];
-		this.currentQuestionIndex =
-			(this.currentQuestionIndex + 1) % this.questions.length;
-		return question.text;
-	}
-
-	public addQuestion(question: IQuestion): void {
-		this.questions.push(question);
-	}
-}
-
-interface ICategoryManager {
-	getCategory(name: string): ICategory | undefined;
-	getCategories(): string[];
-	addCategory(categoryName: string): void;
-}
-
-class CategoryManager implements ICategoryManager {
-	private categories: ICategory[];
-
-	constructor() {
-		this.categories = [];
-	}
-
-	public getCategory(name: string): ICategory | undefined {
-		return this.categories.find(category => category.getName() === name);
-	}
-
-	public getCategories(): string[] {
-		return this.categories.map(category => category.getName());
-	}
-
-	public addCategory(categoryName: string): void {
-		const category = new Category(categoryName);
-		this.categories.push(category);
-	}
-}
-
-interface IWinningCondition {
-	didPlayerWin(purses: number[], currentPlayerIndex: number): boolean;
-}
-
-export class WinningCondition implements IWinningCondition {
-	public didPlayerWin(purses: number[], currentPlayerIndex: number): boolean {
-		return purses[currentPlayerIndex] === 6;
-	}
-}
-
-//Exemple d'utilisation des catégories et des questions
-const categoryManager = new CategoryManager();
-
-categoryManager.addCategory('Geography');
-
-const geographyCategory = categoryManager.getCategory('Geography');
-
-if (geographyCategory) {
-	geographyCategory.addQuestion({ text: 'What is the capital of France?' });
-	geographyCategory.addQuestion({
-		text: 'What is the largest country in the world?'
-	});
-}
-
-console.log(geographyCategory);
