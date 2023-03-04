@@ -1,4 +1,3 @@
-
 export class Game {
 	private players: IPlayer[] = [];
 	private winningCondition: IWinningCondition;
@@ -91,11 +90,11 @@ export class Game {
 		}
 		console.log(
 			`${this.getCurrentPlayer().getName()}his new location is ${
-			  this.places[this.currentPlayerIndex]
+				this.places[this.currentPlayerIndex]
 			}`
-		  );
+		);
 		console.log(`The category is ${this.getCategory().getName()}`);
-      console.log(this.getCategory().getNextQuestion());
+		console.log(this.getCategory().getNextQuestion());
 	}
 	private didPlayerWin(): boolean {
 		return this.winningCondition.didPlayerWin(
@@ -204,45 +203,9 @@ export class Player implements IPlayer {
         this.purse += 1;
       }
 }
+
 interface IQuestion {
 	text: string;
-}
-
-interface IQuestionManager {
-	getQuestion(categoryName: string, index: number): string;
-	getQuestions(categoryName: string): string[];
-	addQuestion(categoryName: string, question: IQuestion): void;
-}
-
-class QuestionManager implements IQuestionManager {
-	private categoryManager: ICategoryManager;
-
-	constructor(categoryManager: ICategoryManager) {
-		this.categoryManager = categoryManager;
-	}
-
-	public getQuestion(categoryName: string, index: number): string {
-		const category = this.categoryManager.getCategory(categoryName);
-		if (category && index >= 0 && index < category.getQuestions().length) {
-			return category.getQuestion(index);
-		}
-		return '';
-	}
-
-	public getQuestions(categoryName: string): string[] {
-		const category = this.categoryManager.getCategory(categoryName);
-		if (category) {
-			return category.getQuestions().map(question => question.text);
-		}
-		return [];
-	}
-
-	public addQuestion(categoryName: string, question: IQuestion): void {
-		const category = this.categoryManager.getCategory(categoryName);
-		if (category) {
-			category.addQuestion(question);
-		}
-	}
 }
 
 interface ICategory {
@@ -337,3 +300,5 @@ if (geographyCategory) {
 		text: 'What is the largest country in the world?'
 	});
 }
+
+console.log(geographyCategory);
