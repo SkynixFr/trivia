@@ -1,4 +1,4 @@
-interface IWinningCondition {
+export interface IWinningCondition {
 	didPlayerWin(purses: number[], currentPlayerIndex: number): boolean;
 }
 

@@ -2,12 +2,17 @@ import { Category, ICategory, IQuestion } from './question';
 import { Player, IPlayer } from './player';
 import { ICategoryManager, CategoryManager } from './category-manager';
 import { WinningCondition } from './WiningCondition';
+
 const categoryManager: ICategoryManager = new CategoryManager();
 
 export class Game {
 	private players: IPlayer[] = [];
-	private winningCondition: IWinningCondition;
-	private questionManager: IQuestionManager;
+	private winningCondition: WinningCondition;
+/* 	private questionManager: IQuestionManager;
+ */	
+
+/*     private questionManager: IQuestion;
+ */
 
 	private popQuestions: Array<string> = [];
 	private scienceQuestions: Array<string> = [];
@@ -18,9 +23,10 @@ export class Game {
 	private currentPlayerIndex: number = 0;
 	private currentPlayer = this.players[this.currentPlayerIndex];
 
-	constructor(winningCondition: IWinningCondition) {
+	constructor(winningCondition: WinningCondition) {
 		this.winningCondition = winningCondition;
-		this.questionManager = new QuestionManager();
+/* 		this.questionManager = new QuestionManager();
+ */
 	}
 	private askQuestion(): void {
 		const currentCategory = this.getCategory();
@@ -31,7 +37,7 @@ export class Game {
 	private getCategory(): Category {
 		const categories = ['Pop', 'Science', 'Sports', 'Rock'];
 		const index = this.currentPlayer.getPlace() % categories.length;
-		return new Category(categories[index], this.questionManager);
+		return new Category(categories[index],);
 	}
 	public addPlayer(name: string) {
 		const player = new Player(name);
