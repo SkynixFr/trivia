@@ -1,36 +1,36 @@
 export class Game {
 	private players: IPlayer[] = [];
 	private winningCondition: IWinningCondition;
-    private questionManager: IQuestionManager;
+	private questionManager: IQuestionManager;
 
 	private popQuestions: Array<string> = [];
 	private scienceQuestions: Array<string> = [];
 	private sportsQuestions: Array<string> = [];
 	private rockQuestions: Array<string> = [];
 	//ajout de question manager
-/*     private questionManager: QuestionManager;
- */	
-    private places: number[] = [];
+	/*     private questionManager: QuestionManager;
+	 */
+	private places: number[] = [];
 	private purses: number[] = [];
 	private currentPlayerIndex: number = 0;
 	private currentPlayer = this.players[this.currentPlayerIndex];
 
 	constructor(winningCondition: IWinningCondition) {
 		this.winningCondition = winningCondition;
-		this.questionManager = new QuestionManager()
+		this.questionManager = new QuestionManager();
 	}
-    private askQuestion(): void {
-      const currentCategory = this.getCategory();
-      console.log(`The category is ${currentCategory.getName()}`);
-      console.log(currentCategory.getQuestion(this.currentPlayer.getPlace()));
-    }
-  
-    private getCategory(): Category {
-      const categories = ["Pop", "Science", "Sports", "Rock"];
-      const index = this.currentPlayer.getPlace() % categories.length;
-      return new Category(categories[index], this.questionManager);
+	private askQuestion(): void {
+		const currentCategory = this.getCategory();
+		console.log(`The category is ${currentCategory.getName()}`);
+		console.log(currentCategory.getQuestion(this.currentPlayer.getPlace()));
 	}
-	  // public add(name: string): boolean {
+
+	private getCategory(): Category {
+		const categories = ['Pop', 'Science', 'Sports', 'Rock'];
+		const index = this.currentPlayer.getPlace() % categories.length;
+		return new Category(categories[index], this.questionManager);
+	}
+	// public add(name: string): boolean {
 	// 	this.players.push(name);
 	// 	this.places[this.howManyPlayers()] = 0;
 	// 	this.purses[this.howManyPlayers()] = 0;
@@ -40,18 +40,16 @@ export class Game {
 	// 	console.log('They are player number ' + this.players.length);
 
 	// 	return true;
-	
+
 	// private popQuestions: Array<string> = [];
 	// private scienceQuestions: Array<string> = [];
 	// private sportsQuestions: Array<string> = [];
 	// private rockQuestions: Array<string> = [];
 
-	
-
 	// private createRockQuestion(index: number): string {
 	// 	return 'Rock Question ' + index;
 	// }
-	
+
 	public addPlayer(name: string) {
 		const player = new Player(name);
 		this.players.push(player);
@@ -227,73 +225,205 @@ export class Player implements IPlayer {
 	public releaseFromPenaltyBox() {
 		this.inPenaltyBox = false;
 	}
-}  
+}
+// interface IQuestionManager {
+// 	getQuestion(categoryName: string, index: number): string;
+// 	getQuestions(categoryName: string): string[];
+// }
+// class QuestionManager implements IQuestionManager {
+// 	private categoryManager: ICategoryManager;
+
+// 	constructor(categoryManager: ICategoryManager) {
+// 		this.categoryManager = categoryManager;
+// 		// this.categories.push(new Category('Pop', this));
+// 		// this.categories.push(new Category('Science', this));
+// 		// this.categories.push(new Category('Sports', this));
+// 		// this.categories.push(new Category('Rock', this));
+// 	}
+
+// 	public getQuestion(categoryName: string, index: number): string {
+// 		const category = this.categoryManager.getCategory(categoryName);
+// 		if (category && index >= 0 && index < category.getQuestions().length) {
+// 			return category.getQuestion(index);
+// 		}
+// 		return '';
+// 	}
+
+// 	public getQuestions(categoryName: string): string[] {
+// 		const category = this.categoryManager.getCategory(categoryName);
+// 		if (category) {
+// 			return category.getQuestions();
+// 		}
+// 		return [];
+// 	}
+// }
+
+// interface ICategory {
+// 	getQuestion(index: number): string;
+// 	getQuestions(): string[];
+// 	getName(): string;
+// 	getNextQuestion(): string;
+// }
+// class Category implements ICategory {
+// 	private name: string;
+// 	private questions: string[];
+// 	private currentQuestionIndex = 0;
+
+// 	constructor(name: string, questionManager: IQuestionManager) {
+// 		this.name = name;
+// 		this.questions = questionManager.getQuestions(name);
+// 	}
+
+// 	public getQuestion(index: number): string {
+// 		return this.questions[index];
+// 	}
+
+// 	public getQuestions(): string[]  {
+// 		return this.questions;
+// 	}
+
+// 	public getName(): string {
+// 		return this.name;
+// 	}
+
+// 	public getNextQuestion(): string {
+// 		const question = this.questions[this.currentQuestionIndex];
+// 		this.currentQuestionIndex =
+// 			(this.currentQuestionIndex + 1) % this.questions.length;
+// 		return question;
+// 	}
+// }
+
+// interface ICategoryManager {
+// 	getCategory(name: string): ICategory | undefined;
+// 	getCategories(): string[];
+// }
+
+// class CategoryManager implements ICategoryManager {
+// 	private categories: ICategory[];
+
+// 	constructor(categories: ICategory[]) {
+// 		this.categories = categories;
+// 	}
+
+// 	public getCategory(name: string): ICategory | undefined {
+// 		return this.categories.find(category => category.getName() === name);
+// 	}
+
+// 	public getCategories(): string[] {
+// 		return this.categories.map(category => category.getName());
+// 	}
+// }
+
+interface IQuestion {
+	text: string;
+}
+
 interface IQuestionManager {
-    getQuestion(categoryName: string, index: number): string;
-    getQuestions(categoryName: string): string[];
-  }
-  class QuestionManager implements IQuestionManager {
-    private categories: ICategory[] = [];
-  
-    constructor() {
-      this.categories.push(new Category("Pop", this));
-      this.categories.push(new Category("Science", this));
-      this.categories.push(new Category("Sports", this));
-      this.categories.push(new Category("Rock", this));
-    }
-  
-    public getQuestion(categoryName: string, index: number): string {
-      const category = this.categories.find((c) => c.getName() === categoryName);
-      if (category && index >= 0 && index < category.getQuestions().length) {
-        return category.getQuestion(index);
-      }
-      return "";
-    }
-  
-    public getQuestions(categoryName: string): string[] {
-      const category = this.categories.find((c) => c.getName() === categoryName);
-      if (category) {
-        return category.getQuestions();
-      }
-      return [];
-    }
-  }
-  
-  interface ICategory {
-    getQuestion(index: number): string;
-    getQuestions(): string[];
-    getName(): string;
-    getNextQuestion(): string;
-  }
-  class Category implements ICategory {
-    private name: string;
-    private questions: string[];
-    private currentQuestionIndex = 0;
-  
-    constructor(name: string, questionManager: IQuestionManager) {
-      this.name = name;
-      this.questions = questionManager.getQuestions(name);
-    }
-  
-    public getQuestion(index: number): string {
-      return this.questions[index];
-    }
-  
-    public getQuestions(): string[] {
-      return this.questions;
-    }
-  
-    public getName(): string {
-      return this.name;
-    }
-  
-    public getNextQuestion(): string {
-      const question = this.questions[this.currentQuestionIndex];
-      this.currentQuestionIndex = (this.currentQuestionIndex + 1) % this.questions.length;
-      return question;
-    }
-  }
-  
+	getQuestion(categoryName: string, index: number): string;
+	getQuestions(categoryName: string): string[];
+	addQuestion(categoryName: string, question: IQuestion): void;
+}
+
+class QuestionManager implements IQuestionManager {
+	private categoryManager: ICategoryManager;
+
+	constructor(categoryManager: ICategoryManager) {
+		this.categoryManager = categoryManager;
+	}
+
+	public getQuestion(categoryName: string, index: number): string {
+		const category = this.categoryManager.getCategory(categoryName);
+		if (category && index >= 0 && index < category.getQuestions().length) {
+			return category.getQuestion(index);
+		}
+		return '';
+	}
+
+	public getQuestions(categoryName: string): string[] {
+		const category = this.categoryManager.getCategory(categoryName);
+		if (category) {
+			return category.getQuestions().map(question => question.text);
+		}
+		return [];
+	}
+
+	public addQuestion(categoryName: string, question: IQuestion): void {
+		const category = this.categoryManager.getCategory(categoryName);
+		if (category) {
+			category.addQuestion(question);
+		}
+	}
+}
+
+interface ICategory {
+	getQuestion(index: number): string;
+	getQuestions(): IQuestion[];
+	getName(): string;
+	getNextQuestion(): string;
+	addQuestion(question: IQuestion): void;
+}
+
+class Category implements ICategory {
+	private name: string;
+	private questions: IQuestion[];
+	private currentQuestionIndex = 0;
+
+	constructor(name: string) {
+		this.name = name;
+		this.questions = [];
+	}
+
+	public getQuestion(index: number): string {
+		return this.questions[index].text;
+	}
+
+	public getQuestions(): IQuestion[] {
+		return this.questions;
+	}
+
+	public getName(): string {
+		return this.name;
+	}
+
+	public getNextQuestion(): string {
+		const question = this.questions[this.currentQuestionIndex];
+		this.currentQuestionIndex =
+			(this.currentQuestionIndex + 1) % this.questions.length;
+		return question.text;
+	}
+
+	public addQuestion(question: IQuestion): void {
+		this.questions.push(question);
+	}
+}
+
+interface ICategoryManager {
+	getCategory(name: string): ICategory | undefined;
+	getCategories(): string[];
+	addCategory(categoryName: string): void;
+}
+
+class CategoryManager implements ICategoryManager {
+	private categories: ICategory[];
+
+	constructor() {
+		this.categories = [];
+	}
+
+	public getCategory(name: string): ICategory | undefined {
+		return this.categories.find(category => category.getName() === name);
+	}
+
+	public getCategories(): string[] {
+		return this.categories.map(category => category.getName());
+	}
+
+	public addCategory(categoryName: string): void {
+		const category = new Category(categoryName);
+		this.categories.push(category);
+	}
+}
 
 interface IWinningCondition {
 	didPlayerWin(purses: number[], currentPlayerIndex: number): boolean;
@@ -303,4 +433,18 @@ export class WinningCondition implements IWinningCondition {
 	public didPlayerWin(purses: number[], currentPlayerIndex: number): boolean {
 		return purses[currentPlayerIndex] === 6;
 	}
+}
+
+//Exemple d'utilisation des catégories et des questions
+const categoryManager = new CategoryManager();
+
+categoryManager.addCategory('Geography');
+
+const geographyCategory = categoryManager.getCategory('Geography');
+
+if (geographyCategory) {
+	geographyCategory.addQuestion({ text: 'What is the capital of France?' });
+	geographyCategory.addQuestion({
+		text: 'What is the largest country in the world?'
+	});
 }
