@@ -107,9 +107,13 @@ export class Game {
 		} else {
 			this.calculateNewPlayerPlace(roll);
 		}
-		// 	console.log('The category is ' + this.currentCategory());
-		// 	this.askQuestion();
-		// }
+		console.log(
+			`${this.getCurrentPlayer().getName()}his new location is ${
+			  this.places[this.currentPlayerIndex]
+			}`
+		  );
+		console.log(`The category is ${this.getCategory().getName()}`);
+      console.log(this.getCategory().getNextQuestion());
 	}
 	private didPlayerWin(): boolean {
 		return this.winningCondition.didPlayerWin(
