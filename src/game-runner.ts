@@ -26,7 +26,9 @@ export class GameRunner {
 			game.addQuestions(sportCategory);
 			game.addQuestions(rockCategory);
 		}
-		console.log(game.getCategories());
+		console.log(`Game building...`);
+		console.log(`The categories are ${game.getCategories()}`);
+		console.log(`The players are ${game.getPlayers()}`);
 
 		game.setCurrentPlayer();
 

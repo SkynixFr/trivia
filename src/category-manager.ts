@@ -25,18 +25,3 @@ export class CategoryManager implements ICategoryManager {
 		this.categories.push(category);
 	}
 }
-//Exemple d'utilisation des catégories et des questions
-// const categoryManager = new CategoryManager();
-
-// categoryManager.addCategory('Geography');
-
-// const geographyCategory = categoryManager.getCategory('Geography');
-
-// if (geographyCategory) {
-// 	geographyCategory.addQuestion({ text: 'What is the capital of France?' });
-// 	geographyCategory.addQuestion({
-// 		text: 'What is the largest country in the world?'
-// 	});
-// }
-
-// console.log(geographyCategory);
