@@ -9,7 +9,7 @@ export interface ICategory {
 export class Category implements ICategory {
 	private name: string;
 	private questions: string[];
-	private currentQuestionIndex = 0;
+	private currentQuestionIndex = -1;
 
 	constructor(name: string) {
 		this.name = name;

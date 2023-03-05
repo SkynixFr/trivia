@@ -128,7 +128,9 @@ export class Game {
 		const currentCategory = this.currentCategory();
 		if (currentCategory) {
 			console.log(`The category is ${currentCategory.getName()}`);
-			console.log(currentCategory.getNextQuestion());
+			console.log(
+				`${currentCategory.getName()} ${currentCategory.getNextQuestion()}`
+			);
 		}
 	}
 
