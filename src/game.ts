@@ -1,18 +1,22 @@
 import { ICategory } from './category';
 import { Player, IPlayer } from './player';
 import { ICategoryManager, CategoryManager } from './category-manager';
-import { WinningCondition } from './WiningCondition';
+import { WinningCondition } from './winingCondition';
 
 export class Game {
 	private players: IPlayer[] = [];
 	private categoryManager: ICategoryManager;
-	private winningCondition: WinningCondition;
+	public winningCondition: WinningCondition;
 	private currentPlayerIndex: number = 0;
 	private currentPlayer: IPlayer = { ...({} as IPlayer) };
 
 	constructor(winningCondition: WinningCondition) {
 		this.winningCondition = winningCondition;
 		this.categoryManager = new CategoryManager();
+	}
+
+	public howManyPlayers(): number {
+		return this.players.length;
 	}
 
 	public addCategory(name: string): void {
@@ -23,7 +27,7 @@ export class Game {
 		this.players.push(new Player(name));
 	}
 
-	private addQuestion(categoryName: ICategory, question: string): void {
+	public addQuestion(categoryName: ICategory, question: string): void {
 		categoryName.addQuestion(question);
 	}
 
@@ -46,7 +50,7 @@ export class Game {
 		return this.players.map(player => player.getName());
 	}
 
-	private getCurrentPlayer() {
+	public getCurrentPlayer() {
 		return this.currentPlayer;
 	}
 
@@ -58,7 +62,7 @@ export class Game {
 		this.currentPlayer = this.players[this.currentPlayerIndex];
 	}
 
-	private currentCategory(): ICategory | undefined {
+	public currentCategory(): ICategory | undefined {
 		const categories = this.getCategories();
 		const index = this.currentPlayer.getPlace() % categories.length;
 
@@ -93,7 +97,7 @@ export class Game {
 		);
 	}
 
-	private nextPlayer(): IPlayer {
+	public nextPlayer(): IPlayer {
 		this.currentPlayerIndex += 1;
 		if (this.currentPlayerIndex == this.players.length) {
 			this.currentPlayerIndex = 0;

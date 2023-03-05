@@ -1,6 +1,6 @@
 import { ICategory } from './category';
 import { Game } from './game';
-import { WinningCondition } from './WiningCondition';
+import { WinningCondition } from './winingCondition';
 
 export class GameRunner {
 	public static main(): void {
