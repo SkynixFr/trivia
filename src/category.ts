@@ -1,18 +1,14 @@
-export interface IQuestion {
-	text: string;
-}
-
 export interface ICategory {
 	getQuestion(index: number): string;
-	getQuestions(): IQuestion[];
+	getQuestions(): string[];
 	getName(): string;
 	getNextQuestion(): string;
-	addQuestion(question: IQuestion): void;
+	addQuestion(question: string): void;
 }
 
 export class Category implements ICategory {
 	private name: string;
-	private questions: IQuestion[];
+	private questions: string[];
 	private currentQuestionIndex = 0;
 
 	constructor(name: string) {
@@ -21,10 +17,10 @@ export class Category implements ICategory {
 	}
 
 	public getQuestion(index: number): string {
-		return this.questions[index].text;
+		return this.questions[index];
 	}
 
-	public getQuestions(): IQuestion[] {
+	public getQuestions(): string[] {
 		return this.questions;
 	}
 
@@ -33,13 +29,12 @@ export class Category implements ICategory {
 	}
 
 	public getNextQuestion(): string {
-		const question = this.questions[this.currentQuestionIndex];
-		this.currentQuestionIndex =
-			(this.currentQuestionIndex + 1) % this.questions.length;
-		return question.text;
+		this.currentQuestionIndex++;
+
+		return this.getQuestion(this.currentQuestionIndex);
 	}
 
-	public addQuestion(question: IQuestion): void {
+	public addQuestion(question: string): void {
 		this.questions.push(question);
 	}
 }

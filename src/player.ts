@@ -1,15 +1,12 @@
-
 export interface IPlayer {
 	getName(): string;
 	getPlace(): number;
 	setPlace(place: number): void;
 	getPurse(): number;
-	setPurse(purse: number): void;
 	isInPenaltyBox(): boolean;
 	setInPenaltyBox(): void;
 	releaseFromPenaltyBox(): void;
 	addCoin(): void;
-    determineIfPlayerIsGettingOutOfPenaltyBox(roll: number): boolean;
 }
 
 export class Player implements IPlayer {
@@ -20,9 +17,7 @@ export class Player implements IPlayer {
 	constructor(name: string) {
 		this.name = name;
 	}
-	public determineIfPlayerIsGettingOutOfPenaltyBox(roll: number): boolean {
-        return roll % 2 !== 0;
-    }   
+
 	public getName(): string {
 		return this.name;
 	}
@@ -39,10 +34,6 @@ export class Player implements IPlayer {
 		return this.purse;
 	}
 
-	public setPurse(purse: number) {
-		this.purse = purse;
-	}
-
 	public isInPenaltyBox(): boolean {
 		return this.inPenaltyBox;
 	}
@@ -55,6 +46,6 @@ export class Player implements IPlayer {
 		this.inPenaltyBox = false;
 	}
 	public addCoin() {
-        this.purse += 1;
-      }
+		this.purse += 1;
+	}
 }

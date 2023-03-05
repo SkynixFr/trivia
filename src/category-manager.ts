@@ -1,6 +1,4 @@
-// category-manager.ts
-
-import { ICategory, Category } from './question';
+import { ICategory, Category } from './category';
 export interface ICategoryManager {
 	getCategory(name: string): ICategory | undefined;
 	getCategories(): string[];
@@ -28,17 +26,17 @@ export class CategoryManager implements ICategoryManager {
 	}
 }
 //Exemple d'utilisation des catégories et des questions
-const categoryManager = new CategoryManager();
+// const categoryManager = new CategoryManager();
 
-categoryManager.addCategory('Geography');
+// categoryManager.addCategory('Geography');
 
-const geographyCategory = categoryManager.getCategory('Geography');
+// const geographyCategory = categoryManager.getCategory('Geography');
 
-if (geographyCategory) {
-	geographyCategory.addQuestion({ text: 'What is the capital of France?' });
-	geographyCategory.addQuestion({
-		text: 'What is the largest country in the world?'
-	});
-}
+// if (geographyCategory) {
+// 	geographyCategory.addQuestion({ text: 'What is the capital of France?' });
+// 	geographyCategory.addQuestion({
+// 		text: 'What is the largest country in the world?'
+// 	});
+// }
 
-console.log(geographyCategory);
+// console.log(geographyCategory);
